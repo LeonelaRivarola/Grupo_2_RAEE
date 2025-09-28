@@ -7,9 +7,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class ProyectoAyds2Application {
 
 	public static void main(String[] args) {
+		System.setProperty("server.port", "8081");
 		SpringApplication.run(ProyectoAyds2Application.class, args);
 	}
-
-	//test rama-juan
 
 }
