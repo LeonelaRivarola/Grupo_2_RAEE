@@ -1,4 +1,4 @@
-package com.ayds2.Proyecto.ayds2;
+package com.ayds2;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
