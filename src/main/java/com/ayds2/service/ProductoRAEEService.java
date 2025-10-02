@@ -2,21 +2,23 @@ package com.ayds2.service;
 
 import org.springframework.stereotype.Service;
 
-import com.ayds2.dao.iProductoRAEEDAO;
-import com.ayds2.model.ProductoRAEE;
+import com.ayds2.dao.iProductoRaeeDAO;
+import com.ayds2.model.ProductoRaee;
 
 @Service
-public class ProductoRAEEService implements iProductoRAEEService {
+public class ProductoRaeeService {
 
-    private final iProductoRAEEDAO productoRAEEDAO;
+    private final iProductoRaeeDAO productoRaeeDAO;
 
-    public ProductoRAEEService(iProductoRAEEDAO productoRAEEDAO) {
-        this.productoRAEEDAO = productoRAEEDAO;
+    public ProductoRaeeService(iProductoRaeeDAO productoRaeeDAO) {
+        this.productoRaeeDAO = productoRaeeDAO;
     }
 
-    @Override
-    public ProductoRAEE obtenerProducto(int id) {
-        return productoRAEEDAO.getProducto(id);
+    public ProductoRaee obtenerProducto(int id) {
+        ProductoRaee producto = productoRaeeDAO.getProducto(id);
+        if (producto == null) {
+            throw new RuntimeException("Producto con id " + id + " no encontrado");
+        }
+        return producto;
     }
-
 }

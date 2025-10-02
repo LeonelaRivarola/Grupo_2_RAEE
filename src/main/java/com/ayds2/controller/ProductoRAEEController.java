@@ -1,25 +1,33 @@
 package com.ayds2.controller;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ayds2.model.ProductoRAEE;
-import com.ayds2.service.ProductoRAEEService;
+import com.ayds2.model.ProductoRaee;
+import com.ayds2.service.ProductoRaeeService;
 
 @RestController
 @RequestMapping("/producto")
-public class ProductoRAEEController {
+public class ProductoRaeeController {
 
-    private final ProductoRAEEService productoService;
+    private final ProductoRaeeService productoService;
 
-    public ProductoRAEEController(ProductoRAEEService productoRAEEService){
-        this.productoService = productoRAEEService;
+    public ProductoRaeeController(ProductoRaeeService productoRaeeService) {
+        this.productoService = productoRaeeService;
     }
 
     @GetMapping("/{id}")
-    public ProductoRAEE getProductoRAEE(@PathVariable int id){
-        return productoService.obtenerProducto(id);
+    public ResponseEntity<?> getProductoById(@PathVariable int id) {
+        try {
+            ProductoRaee producto = productoService.obtenerProducto(id);
+            return ResponseEntity.ok(producto);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("No se encontró el producto con id " + id);
+        }
     }
 }
