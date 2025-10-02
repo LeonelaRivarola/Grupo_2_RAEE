@@ -11,7 +11,7 @@ public class ProductoRaee {
     private String categoria; // private int categoria_id;
     private int stock;
 
-    public ProductoRaee(int id, String nombre, double precio, String descripcion, String categoria){ //,int stock)
+    public ProductoRaee(int id, String nombre, double precio, String descripcion, String categoria,int stock){
         this.id_ProductoRAEE = id;
         this.nombre = nombre;
         this.precio = precio;
