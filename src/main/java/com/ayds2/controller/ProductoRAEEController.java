@@ -24,7 +24,9 @@ public class ProductoRaeeController {
     public ResponseEntity<?> getProductoById(@PathVariable int id) {
         try {
             ProductoRaee producto = productoService.getProducto(id);
+            
             return ResponseEntity.ok(producto);
+            
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("No se encontró el producto con id " + id);
