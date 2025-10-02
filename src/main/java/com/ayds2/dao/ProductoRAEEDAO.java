@@ -19,10 +19,13 @@ public class ProductoRaeeDAO implements iProductoRaeeDAO {
     }
 
     @Override
-    public ProductoRaee getProducto(int id) {
-        String sql = "SELECT * FROM productoraee WHERE id_ProductoRAEE = :id";
+    public ProductoRaee selectProducto(int id) {
+        String sql = "SELECT p.id_ProductoRAEE, p.nombre, p.precio, p.descripcion, c.nombre AS categoria, p.stock " +
+                 "FROM productoraee p " +
+                 "JOIN categoria c ON p.categoria_id = c.id_categoria " +
+                 "WHERE p.id_ProductoRAEE = :id";
         try (Connection con = sql2o.open()) {
-            System.out.println("✅ Conexión a la BD establecida correctamente!");
+            System.out.println("Conexión a la BD establecida correctamente!");
             return con.createQuery(sql)
                     .addParameter("id", id)
                     .executeAndFetchFirst(ProductoRaee.class);

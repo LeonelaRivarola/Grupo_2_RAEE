@@ -15,9 +15,9 @@ public class ProductoRaeeService {
         this.productoRaeeDAO = productoRaeeDAO;
     }
 
-    public ProductoRaee obtenerProducto(int id) {
+    public ProductoRaee getProducto(int id) {
         try {
-            ProductoRaee producto = productoRaeeDAO.getProducto(id);
+            ProductoRaee producto = productoRaeeDAO.selectProducto(id);
             if (producto == null) {
                 throw new RuntimeException("Producto con id " + id + " no encontrado");
             }

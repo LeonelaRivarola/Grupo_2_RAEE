@@ -23,7 +23,7 @@ public class ProductoRaeeController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getProductoById(@PathVariable int id) {
         try {
-            ProductoRaee producto = productoService.obtenerProducto(id);
+            ProductoRaee producto = productoService.getProducto(id);
             return ResponseEntity.ok(producto);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
