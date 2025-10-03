@@ -1,4 +1,4 @@
-package com.ayds2.Proyecto.ayds2;
+package com.ayds2.Proyecto.ayds2.cu01.dao;
 
 //import java.util.HashMap;
 //import java.util.List;

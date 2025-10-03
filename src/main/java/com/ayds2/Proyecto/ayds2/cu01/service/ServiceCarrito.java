@@ -1,6 +1,7 @@
-package com.ayds2.Proyecto.ayds2;
+package com.ayds2.Proyecto.ayds2.cu01.service;
 
 import org.springframework.stereotype.Service;
+import com.ayds2.Proyecto.ayds2.cu01.dao.CarritoDAO;
 
 @Service
 public class ServiceCarrito{
