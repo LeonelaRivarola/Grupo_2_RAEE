@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.ayds2.Proyecto.ayds2.cu02.model.ProductoRaee;
 import com.ayds2.Proyecto.ayds2.cu02.service.ProductoRaeeService;
 
 @RestController
