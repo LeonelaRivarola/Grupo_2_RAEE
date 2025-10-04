@@ -17,17 +17,17 @@ public class ProductoRaeeDAO implements iProductoRaeeDAO {
              "FROM productoraee p " +
              "WHERE p.id_ProductoRAEE = :id";
          try (Connection con = Sql2oDAO.getSql2o().open()) {
-        ProductoRaee producto = con.createQuery(sql)
+        ProductoRaee productoRaee = con.createQuery(sql)
                 .addParameter("id", id)
                 .executeAndFetchFirst(ProductoRaee.class);
 
-        if (producto == null) {
+        if (productoRaee == null) {
             return "{\"mensaje\": \"Producto con id " + id + " no encontrado\"}";
         }
 
         // Convertir a JSON usando Gson
         Gson gson = new Gson();
-        return gson.toJson(producto);
+        return gson.toJson(productoRaee);
         
         } catch (Exception e) {
             System.err.println("Error en getProducto: " + e.getMessage());

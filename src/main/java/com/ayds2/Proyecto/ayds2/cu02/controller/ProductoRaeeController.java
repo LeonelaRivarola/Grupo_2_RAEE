@@ -22,8 +22,8 @@ public class ProductoRaeeController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getProductoById(@PathVariable int id) {
         try {
-            String producto = productoService.getProducto(id);
-            return ResponseEntity.ok(producto);
+            String productoRaee = productoService.getProducto(id);
+            return ResponseEntity.ok(productoRaee);
             
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró el producto con id " + id);
