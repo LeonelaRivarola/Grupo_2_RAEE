@@ -22,7 +22,7 @@ public class ProductoRaeeController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getProductoById(@PathVariable int id) {
         try {
-            ProductoRaee producto = productoService.getProducto(id);
+            String producto = productoService.getProducto(id);
             return ResponseEntity.ok(producto);
             
         } catch (Exception e) {

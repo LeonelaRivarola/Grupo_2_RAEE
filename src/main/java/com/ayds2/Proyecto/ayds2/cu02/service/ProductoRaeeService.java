@@ -7,16 +7,15 @@ import com.ayds2.Proyecto.ayds2.cu02.model.ProductoRaee;
 @Service
 public class ProductoRaeeService {
 
-    private final iProductoRaeeDAO productoRaeeDAO; // final para que no cambie al crear el servicio por seguridad, por
-                                                    // si se implementara otra
+    private final iProductoRaeeDAO productoRaeeDAO; // final para que no cambie al crear el servicio por seguridad, por si se implementara otra
 
     public ProductoRaeeService(iProductoRaeeDAO productoRaeeDAO) {
         this.productoRaeeDAO = productoRaeeDAO;
     }
 
-    public ProductoRaee getProducto(int id) {
+    public String getProducto(int id) {
         try {
-            ProductoRaee producto = productoRaeeDAO.selectProducto(id);
+            String producto = productoRaeeDAO.selectProducto(id);
             if (producto == null) {
                 throw new RuntimeException("Producto con id " + id + " no encontrado");
             }
