@@ -1,4 +1,4 @@
-package com.ayds2.Proyecto.ayds2.cu01.model;
+package com.ayds2.Proyecto.ayds2.cu04.model;
 
 import lombok.Data;
 
