@@ -56,11 +56,16 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-    <groupId>com.google.code.gson</groupId>
-    <artifactId>gson</artifactId>
-    <version>2.10.1</version>
-</dependency>
-
+    		<groupId>com.google.code.gson</groupId>
+    		<artifactId>gson</artifactId>
+   			<version>2.10.1</version>
+		</dependency>
+		<!-- Dependecia instalada pára agregar mercado pago en el proyecto-->
+		<dependency>
+  			<groupId>com.mercadopago</groupId>
+  			<artifactId>sdk-java</artifactId>
+  			<version>2.5.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>
