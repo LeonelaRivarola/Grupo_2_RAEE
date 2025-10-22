@@ -1,64 +1,68 @@
 package com.ayds2.Proyecto.ayds2.cu03.dao;
 
-import java.util.List;
+import java.util.logging.Logger;
 
+import org.springframework.stereotype.Repository;
 import org.sql2o.Connection;
-import org.sql2o.Sql2o;
 
 import com.ayds2.Proyecto.ayds2.cu03.model.Compra;
-import com.ayds2.Proyecto.ayds2.cu03.model.DetalleCompra;
 import com.ayds2.Proyecto.ayds2.utils.Sql2oDAO;
 
+@Repository
 public class CompraDAO implements ICompraDAO {
-    private final Sql2o sql2o;
 
-    public CompraDAO() {
-        this.sql2o = Sql2oDAO.getSql2o();
-    }
+    private static final Logger log = Logger.getLogger(CompraDAO.class.getName());
 
+    @Override
     public int registrarCompra(Compra compra) {
+        int idGenerado = -1;
         String sqlInsertCompra = """
             INSERT INTO compra (idUsuario, fechaCompra, totalCompra, formaEntrega, metodoPago)
-            VALUES (:idUsuario, :fechaCompra, :totalCompra, :formaEntrega, :metodoPago)
+            VALUES (:idUsuario, NOW(), :total, :formaEntrega, :metodoPago)
         """;
 
         String sqlInsertDetalle = """
-            INSERT INTO detalle_compra (idCompra, idProductoRAEE, cantidad, precioUnitario)
-            VALUES (:idCompra, :idProductoRAEE, :cantidad, :precioUnitario)
+            INSERT INTO detalle_compra (idCompra, idProducto, cantidad, precioUnitario)
+            VALUES (:idCompra, :idProducto, :cantidad, :precioUnitario)
         """;
 
-        try (Connection conn = sql2o.beginTransaction()) {
-
-            // Insertar la cabecera (COMPRA)
-            int idCompra = conn.createQuery(sqlInsertCompra, true)
+        try (Connection con = Sql2oDAO.getSql2o().beginTransaction()) {
+            idGenerado = (int) con.createQuery(sqlInsertCompra, true)
                     .addParameter("idUsuario", compra.getIdUsuario())
-                    .addParameter("fechaCompra", compra.getFechaCompra())
-                    .addParameter("totalCompra", compra.getTotal())
+                    .addParameter("total", compra.getTotal())
                     .addParameter("formaEntrega", compra.getFormaEntrega())
                     .addParameter("metodoPago", compra.getMetodoPago())
                     .executeUpdate()
-                    .getKey(Integer.class);
+                    .getKey();
 
-            // Insertar los detalles (DETALLE_COMPRA)
-            List<DetalleCompra> detalles = compra.getDetalles();
-            if (detalles != null && !detalles.isEmpty()) {
-                for (DetalleCompra d : detalles) {
-                    conn.createQuery(sqlInsertDetalle)
-                            .addParameter("idCompra", idCompra)
-                            .addParameter("idProductoRAEE", d.getIdProductoRaee())
-                            .addParameter("cantidad", d.getCantidad())
-                            .addParameter("precioUnitario", d.getPrecioUnitario())
-                            .executeUpdate();
-                }
+            // Insertar detalles
+            for (var detalle : compra.getDetalles()) {
+                con.createQuery(sqlInsertDetalle)
+                        .addParameter("idCompra", idGenerado)
+                        .addParameter("idProducto", detalle.getIdProductoRaee())
+                        .addParameter("cantidad", detalle.getCantidad())
+                        .addParameter("precioUnitario", detalle.getPrecioUnitario())
+                        .executeUpdate();
             }
 
-            // Confirmar la transacción
-            conn.commit();
-            return idCompra; // Éxito
-
+            con.commit();
         } catch (Exception e) {
-            System.err.println(" Error al registrar la compra: " + e.getMessage());
-            return -1; // Falla
+            log.severe("Error registrando compra: " + e.getMessage());
+        }
+
+        return idGenerado;
+    }
+
+    @Override
+    public void vaciarCarrito(int idCarrito) {
+        String sqlDelete = "DELETE FROM productoraee_has_carritoraee WHERE carritoRAEE_id = :idCarrito";
+
+        try (Connection con = Sql2oDAO.getSql2o().open()) {
+            con.createQuery(sqlDelete)
+                .addParameter("idCarrito", idCarrito)
+                .executeUpdate();
+        } catch (Exception e) {
+            log.severe("Error al vaciar carrito: " + e.getMessage());
         }
     }
 }
