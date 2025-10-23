@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.ayds2.Proyecto.ayds2.cu01.service.ServiceCarrito;
 
+// CU-01: Agregar producto RAEE a Carrito.
+
 @RestController
 public class ControllerCarrito {
     private ServiceCarrito serviceCarrito;

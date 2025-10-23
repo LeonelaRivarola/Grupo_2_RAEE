@@ -8,13 +8,17 @@ public class ProductoRAEE {
     private String nombre;
     private int categoria_id;
     private String descripcion;
-    private float precio;
+    private double precio;
+    private int stock;
 
-    public ProductoRAEE(int id, String nombre, int categoria, String descripcion, float precio) {
+    public ProductoRAEE(){}
+
+    public ProductoRAEE(int id, String nombre, int categoria, String descripcion, double precio, int stock) {
         this.id_ProductoRAEE = id;
         this.nombre = nombre;
         this.categoria_id = categoria;
         this.descripcion = descripcion;
         this.precio = precio;
+        this.stock = stock;
     }
 }
