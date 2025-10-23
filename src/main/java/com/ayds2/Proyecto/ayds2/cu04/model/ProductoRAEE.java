@@ -10,15 +10,4 @@ public class ProductoRAEE {
     private String descripcion;
     private double precio;
     private int stock;
-
-    public ProductoRAEE(){}
-
-    public ProductoRAEE(int id, String nombre, int categoria, String descripcion, double precio, int stock) {
-        this.id_ProductoRAEE = id;
-        this.nombre = nombre;
-        this.categoria_id = categoria;
-        this.descripcion = descripcion;
-        this.precio = precio;
-        this.stock = stock;
-    }
 }
