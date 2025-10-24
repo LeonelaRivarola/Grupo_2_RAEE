@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.ayds2.Proyecto.ayds2.cu02.service.ProductoRaeeService;
 
+// CU-02: Ver producto RAEE.
+
 @RestController
 @RequestMapping("/producto")
 public class ProductoRaeeController {

@@ -9,6 +9,7 @@ public class ServiceCarritoCU04 {
     private CarritoDAOCU04 carritoDAO = new CarritoDAOCU04();
 
     public String verCarrito(int id_carrito) {
+        
         return carritoDAO.select(id_carrito);
     } 
 
