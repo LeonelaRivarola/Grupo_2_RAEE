@@ -2,6 +2,8 @@ package com.ayds2.Proyecto.ayds2.cu04.dao;
 
 import java.util.List;
 import java.util.logging.Logger;
+
+import org.springframework.stereotype.Repository;
 import org.sql2o.Connection;
 import com.ayds2.Proyecto.ayds2.cu04.model.Carrito;
 import com.ayds2.Proyecto.ayds2.cu04.model.DetalleCarrito;
@@ -9,6 +11,7 @@ import com.ayds2.Proyecto.ayds2.cu04.model.ProductoRAEE;
 import com.ayds2.Proyecto.ayds2.utils.Sql2oDAO;
 import com.google.gson.Gson;
 
+@Repository
 public class CarritoDAOCU04 implements iCarritoDAOCU04 {
 
     @Override
@@ -54,4 +57,30 @@ public class CarritoDAOCU04 implements iCarritoDAOCU04 {
             return "{\"error\": \"Error al obtener el carrito y sus productos\"}";
         }
     }
+
+    // ---- métodos nuevos ----
+    public void deleteDetallesByCarritoId(int id_carrito) {
+        try (Connection con = Sql2oDAO.getSql2o().open()) {
+            String sql = "DELETE FROM productoraee_has_carritoraee WHERE carritoRAEE_id = :id_carrito";
+            con.createQuery(sql)
+               .addParameter("id_carrito", id_carrito)
+               .executeUpdate();
+        } catch (Exception e) {
+            Logger.getLogger("CarritoDAO").severe("Error al eliminar detalles del carrito: " + e.getMessage());
+            throw e;
+        }
+    }
+
+    @Override
+    public void deleteCarritoById(int id_carrito) {
+        try (Connection con = Sql2oDAO.getSql2o().open()) {
+            String sql = "DELETE FROM carritoraee WHERE id_carritoRAEE = :id_carrito";
+            con.createQuery(sql)
+               .addParameter("id_carrito", id_carrito)
+               .executeUpdate();
+        } catch (Exception e) {
+            Logger.getLogger("CarritoDAO").severe("Error al eliminar carrito: " + e.getMessage());
+            throw e;
+        }
+    }    
 }
