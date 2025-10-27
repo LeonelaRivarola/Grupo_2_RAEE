@@ -1,8 +1,8 @@
 package com.ayds2.Proyecto.ayds2.cu03.service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -20,9 +20,11 @@ import com.ayds2.Proyecto.ayds2.cu04.model.Carrito;
 import com.ayds2.Proyecto.ayds2.cu04.model.DetalleCarrito;
 import com.ayds2.Proyecto.ayds2.cu04.model.ProductoRAEE;
 import com.google.gson.Gson;
+import com.mercadopago.resources.payment.Payment;
 
 @Service
 public class CompraService {
+
     private final Logger logger = Logger.getLogger("CompraService");
     private final Gson gson = new Gson();
 
@@ -38,88 +40,85 @@ public class CompraService {
     @Autowired
     private CarritoDAOCU04 carritoDAOCU04;
 
+    /**
+     * Paso 1: crear preferencia de pago y devolver URL de checkout
+     */
     public String procesarCompra(String formaEntrega, String metodoPago, String jsonCarrito) {
         try {
-            // parsear carrito
+            // Parsear carrito
             Carrito carrito = gson.fromJson(jsonCarrito, Carrito.class);
 
-            // calcular total
+            // Calcular total
             double total = 0.0;
             if (carrito.getDetalles() != null && carrito.getProductos() != null) {
-                // mapear idProducto -> precio
                 java.util.Map<Integer, Double> precioMap = new java.util.HashMap<>();
                 for (ProductoRAEE p : carrito.getProductos()) {
                     precioMap.put(p.getId_ProductoRAEE(), (double) p.getPrecio());
                 }
                 for (DetalleCarrito dc : carrito.getDetalles()) {
-                    Double p = precioMap.get(dc.getProductoRAEE_id());
-                    if (p == null) p = 0.0;
-                    total += p * dc.getCantidad();
+                    Double precio = precioMap.get(dc.getProductoRAEE_id());
+                    if (precio == null) precio = 0.0;
+                    total += precio * dc.getCantidad();
                 }
             }
 
-            // 1. validar pago
+            // Crear solicitud de pago
             PagoRequest pagoRequest = new PagoRequest(
-                    BigDecimal.valueOf(total),
-                    "Compra carrito id " + carrito.getId_carritoRAEE(),
-                    metodoPago,
-                    "usuario@" + carrito.getUsuario_id()
-                    ); // si tenés email real sacalo de usuario
+                BigDecimal.valueOf(total),
+                "Compra carrito id " + carrito.getId_carritoRAEE(),
+                metodoPago,
+                "usuario@" + carrito.getUsuario_id()
+            );
 
             IPago pago = pagoFactory.getPago(metodoPago);
+
+            // 1. Crear preferencia en Mercado Pago
             PagoResponse pagoResponse = pago.procesarPago(pagoRequest);
 
-            if (pagoResponse == null) {
-                logger.severe("Pago rechazado o error en procesamiento");
-                return "{\"error\":\"Pago rechazado\"}";
-            }
+            // 2. Guardar la preferencia temporalmente (opcional, para tracking)
+            logger.info("Preferencia creada: " + pagoResponse.getIdPreferencia());
 
-            // 2. actualizar stock
-            if (carrito.getDetalles() != null) {
-                actualizarStockService.actualizarStock(carrito.getDetalles());
-            }
-
-            // 3. registrar compra
-            Compra compra = new Compra();
-            compra.setIdUsuario(carrito.getUsuario_id());
-            compra.setFechaCompra(new Date(System.currentTimeMillis()));
-            compra.setTotal(total);
-            compra.setFormaEntrega(formaEntrega);
-            compra.setMetodoPago(metodoPago);
-
-            // convertir detalles del carrito a detalles de compra con precio unitario
-            List<DetalleCompra> detallesCompra = new ArrayList<>();
-            java.util.Map<Integer, Double> precioMap = new java.util.HashMap<>();
-            if (carrito.getProductos() != null) {
-                for (ProductoRAEE p : carrito.getProductos()) {
-                    precioMap.put(p.getId_ProductoRAEE(), (double) p.getPrecio());
-                }
-            }
-            if (carrito.getDetalles() != null) {
-                for (DetalleCarrito dc : carrito.getDetalles()) {
-                    DetalleCompra d = new DetalleCompra();
-                    d.setIdProductoRaee(dc.getProductoRAEE_id());
-                    d.setCantidad(dc.getCantidad());
-                    Double precioUnit = precioMap.getOrDefault(dc.getProductoRAEE_id(), 0.0);
-                    d.setPrecioUnitario(precioUnit);
-                    detallesCompra.add(d);
-                }
-            }
-            compra.setDetalles(detallesCompra);
-
-            compraDAO.registrarCompra(compra);
-
-            // 4. eliminar carrito y detalles del carrito
-            carritoDAOCU04.deleteDetallesByCarritoId(carrito.getId_carritoRAEE());
-            carritoDAOCU04.deleteCarritoById(carrito.getId_carritoRAEE());
-
-            // 5. responder
-            return "{\"Compra\":\"Exitosa\"}";
+            // 3. Retornar la URL de pago al frontend (sandboxInitPoint)
+            return "{\"mensaje\":\"Preferencia creada. Complete el pago en la URL indicada.\"," +
+                   "\"sandbox_url\":\"" + pagoResponse.getSandboxInitPoint() + "\"," +
+                   "\"idPreferencia\":\"" + pagoResponse.getIdPreferencia() + "\"}";
 
         } catch (Exception e) {
             logger.severe("Error en procesarCompra: " + e.getMessage());
             e.printStackTrace();
             return "{\"error\":\"Error procesando compra\"}";
         }
-    }    
+    }
+
+    /**
+     * Paso 2: validar el pago real (desde webhook) y registrar la compra en BD
+     */
+    public boolean validarPagoYRegistrarCompra(String paymentId) {
+        try {
+            MercadoPagoService mpService = new MercadoPagoService();
+            Payment payment = mpService.obtenerPago(paymentId);
+
+            if (payment != null && "approved".equalsIgnoreCase(payment.getStatus())) {
+                logger.info("Pago aprobado por Mercado Pago. Registrando compra...");
+
+                // Crear y registrar la compra
+                Compra compra = new Compra();
+                compra.setFechaCompra(new Date(System.currentTimeMillis()));
+                compra.setTotal(payment.getTransactionAmount().doubleValue());
+                compra.setFormaEntrega("domicilio"); // Podés ajustarlo si querés hacerlo dinámico
+                compra.setMetodoPago("MercadoPago");
+                compra.setIdPagoMP(paymentId);
+
+                compraDAO.registrarCompra(compra);
+                return true;
+            } else {
+                logger.warning("Pago no aprobado. Estado: " + (payment != null ? payment.getStatus() : "null"));
+            }
+
+        } catch (Exception e) {
+            logger.severe("Error validando y registrando compra: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

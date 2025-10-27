@@ -11,4 +11,3 @@ public class Carrito {
     private List<ProductoRAEE> productos;
     private List<DetalleCarrito> detalles;   
 }
-

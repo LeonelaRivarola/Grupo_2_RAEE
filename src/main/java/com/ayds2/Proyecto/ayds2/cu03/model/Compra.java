@@ -13,5 +13,6 @@ public class Compra {
     private double total;
     private String formaEntrega;
     private String metodoPago;
+    private String idPagoMP;
     private List<DetalleCompra> detalles;
 }

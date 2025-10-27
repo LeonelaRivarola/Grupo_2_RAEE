@@ -23,26 +23,26 @@ public class CarritoDAOCU04 implements iCarritoDAOCU04 {
         try (Connection con = Sql2oDAO.getSql2o().open()) {
             //primero recuperamos el carrito
             String sqlCarrito = "SELECT id_carritoRAEE, usuario_id FROM carritoraee " + 
-                                "WHERE id_carritoRAEE = :id_carrito";
+                                "WHERE id_carritoRAEE = :id_carritoRAEE";
             Carrito carrito = con.createQuery(sqlCarrito)
-                    .addParameter("id_carrito", id_carrito)
+                    .addParameter("id_carritoRAEE", id_carrito)
                     .executeAndFetchFirst(Carrito.class);
 
             //luego recuperamos los productos que están en el carrito
             String sqlProductos = "SELECT pr.id_ProductoRAEE, pr.nombre, pr.categoria_id, pr.descripcion, pr.precio, pr.stock " +
                                 "FROM productoraee pr " +
-                                "JOIN productoraee_has_carritoraee pc ON pr.id_ProductoRAEE = pc.productoRAEE_id " +
-                                "WHERE pc.carritoRAEE_id = :id_carrito";
+                                "JOIN detallecarrito pc ON pr.id_ProductoRAEE = pc.productoRAEE_id " +
+                                "WHERE pc.carritoRAEE_id = :id_carritoRAEE";
             List<ProductoRAEE> productos = con.createQuery(sqlProductos)
-                    .addParameter("id_carrito", id_carrito)
+                    .addParameter("id_carritoRAEE", id_carrito)
                     .executeAndFetch(ProductoRAEE.class);
 
             //y  por ultimo recuperamos cuanto cantidad hay de cada producto en el carrito
             String sqlDetalles = "SELECT productoRAEE_id, carritoRAEE_id, cantidad " +
-                                "FROM productoraee_has_carritoraee " +
-                                "WHERE carritoRAEE_id = :id_carrito";
+                                "FROM detallecarrito " +
+                                "WHERE carritoRAEE_id = :id_carritoRAEE";
             List<DetalleCarrito> detalles = con.createQuery(sqlDetalles)
-                    .addParameter("id_carrito", id_carrito)
+                    .addParameter("id_carritoRAEE", id_carrito)
                     .executeAndFetch(DetalleCarrito.class);
 
             carrito.setProductos(productos);
@@ -61,9 +61,9 @@ public class CarritoDAOCU04 implements iCarritoDAOCU04 {
     // ---- métodos nuevos ----
     public void deleteDetallesByCarritoId(int id_carrito) {
         try (Connection con = Sql2oDAO.getSql2o().open()) {
-            String sql = "DELETE FROM productoraee_has_carritoraee WHERE carritoRAEE_id = :id_carrito";
+            String sql = "DELETE FROM detallecarrito WHERE carritoRAEE_id = :id_carritoRAEE";
             con.createQuery(sql)
-               .addParameter("id_carrito", id_carrito)
+               .addParameter("id_carritoRAEE", id_carrito)
                .executeUpdate();
         } catch (Exception e) {
             Logger.getLogger("CarritoDAO").severe("Error al eliminar detalles del carrito: " + e.getMessage());
@@ -74,9 +74,9 @@ public class CarritoDAOCU04 implements iCarritoDAOCU04 {
     @Override
     public void deleteCarritoById(int id_carrito) {
         try (Connection con = Sql2oDAO.getSql2o().open()) {
-            String sql = "DELETE FROM carritoraee WHERE id_carritoRAEE = :id_carrito";
+            String sql = "DELETE FROM carritoraee WHERE id_carritoRAEE = :id_carritoRAEE";
             con.createQuery(sql)
-               .addParameter("id_carrito", id_carrito)
+               .addParameter("id_carritoRAEE", id_carrito)
                .executeUpdate();
         } catch (Exception e) {
             Logger.getLogger("CarritoDAO").severe("Error al eliminar carrito: " + e.getMessage());

@@ -4,11 +4,13 @@ import org.springframework.stereotype.Service;
 
 import com.ayds2.Proyecto.ayds2.cu03.model.PagoRequest;
 import com.ayds2.Proyecto.ayds2.cu03.model.PagoResponse;
+import com.mercadopago.client.payment.PaymentClient;
 import com.mercadopago.client.preference.PreferenceClient;
 import com.mercadopago.client.preference.PreferenceItemRequest;
 import com.mercadopago.client.preference.PreferencePayerRequest;
 import com.mercadopago.client.preference.PreferenceRequest;
 import com.mercadopago.core.MPRequestOptions;
+import com.mercadopago.resources.payment.Payment;
 import com.mercadopago.resources.preference.Preference;
 import com.mercadopago.exceptions.MPApiException;
 import com.mercadopago.exceptions.MPException;
@@ -99,4 +101,26 @@ public class MercadoPagoService implements IPago {
             throw e;
         }
     }
+
+    @Override
+    public boolean validarPago(String preferenceId) {
+        try {
+            PaymentClient client = new PaymentClient();
+            Payment payment = client.get(Long.parseLong(preferenceId));
+
+            if (payment != null && "approved".equalsIgnoreCase(payment.getStatus())) {
+                return true;
+            }
+        } catch (Exception e) {
+            System.err.println("Error validando pago: " + e.getMessage());
+        }
+        return false;
+    }
+
+    @Override
+    public Payment obtenerPago(String paymentId) throws Exception {
+        PaymentClient client = new PaymentClient();
+        return client.get(Long.parseLong(paymentId));
+    }
+
 }

@@ -12,8 +12,8 @@ public class CompraDAO implements ICompraDAO {
 
     @Override
     public void registrarCompra(Compra compra) {
-        String sqlInsertCompra = "INSERT INTO compra (fecha, formaEntrega, total, usuario_id, metodoPago) " +
-                "VALUES (:fecha, :formaEntrega, :total, :usuario_id, :metodoPago)";
+        String sqlInsertCompra = "INSERT INTO compra (fecha, formaEntrega, total, usuario_id, metodoPago, idPagoMP) " +
+                         "VALUES (:fecha, :formaEntrega, :total, :usuario_id, :metodoPago, :idPagoMP)";
 
         try (Connection con = Sql2oDAO.getSql2o().open()) {
             org.sql2o.Query q = con.createQuery(sqlInsertCompra, true)
@@ -21,7 +21,9 @@ public class CompraDAO implements ICompraDAO {
                     .addParameter("formaEntrega", compra.getFormaEntrega())
                     .addParameter("total", compra.getTotal())
                     .addParameter("usuario_id", compra.getIdUsuario())
-                    .addParameter("metodoPago", compra.getMetodoPago());
+                    .addParameter("metodoPago", compra.getMetodoPago())
+                    .addParameter("idPagoMP", compra.getIdPagoMP());
+
 
             Number key = (Number) q.executeUpdate().getKey();
             int idCompra = key.intValue();
