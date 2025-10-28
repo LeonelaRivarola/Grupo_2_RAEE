@@ -14,5 +14,5 @@ public class PagoRequest {
     private BigDecimal monto;
     private String descripcion;
     private String metodoPago;
-    private String email;    
+    private String email;
 }

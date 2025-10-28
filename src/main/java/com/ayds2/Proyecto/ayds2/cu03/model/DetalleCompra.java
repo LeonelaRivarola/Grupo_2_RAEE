@@ -5,8 +5,8 @@ import lombok.Data;
 @Data
 public class DetalleCompra {
     private int idDetalleCompra;
-    private int idProductoRaee;
     private int idCompra;
+    private int idProductoRaee;
     private int cantidad;
     private double precioUnitario;
 }

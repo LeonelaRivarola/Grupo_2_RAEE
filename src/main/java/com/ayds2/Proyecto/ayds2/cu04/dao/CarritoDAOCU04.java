@@ -59,6 +59,7 @@ public class CarritoDAOCU04 implements iCarritoDAOCU04 {
     }
 
     // ---- métodos nuevos ----
+    @Override
     public void deleteDetallesByCarritoId(int id_carrito) {
         try (Connection con = Sql2oDAO.getSql2o().open()) {
             String sql = "DELETE FROM detallecarrito WHERE carritoRAEE_id = :id_carritoRAEE";
@@ -69,18 +70,5 @@ public class CarritoDAOCU04 implements iCarritoDAOCU04 {
             Logger.getLogger("CarritoDAO").severe("Error al eliminar detalles del carrito: " + e.getMessage());
             throw e;
         }
-    }
-
-    @Override
-    public void deleteCarritoById(int id_carrito) {
-        try (Connection con = Sql2oDAO.getSql2o().open()) {
-            String sql = "DELETE FROM carritoraee WHERE id_carritoRAEE = :id_carritoRAEE";
-            con.createQuery(sql)
-               .addParameter("id_carritoRAEE", id_carrito)
-               .executeUpdate();
-        } catch (Exception e) {
-            Logger.getLogger("CarritoDAO").severe("Error al eliminar carrito: " + e.getMessage());
-            throw e;
-        }
-    }    
+    } 
 }

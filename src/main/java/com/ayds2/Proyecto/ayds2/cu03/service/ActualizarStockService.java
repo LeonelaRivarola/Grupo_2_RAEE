@@ -14,9 +14,11 @@ public class ActualizarStockService {
 
     private final Logger logger = Logger.getLogger("ActualizarStockService");
 
+    //Inyeccion de dependencia
     @Autowired
     private ActualizarStockDAO actualizarStockDAO;
 
+    //Recorre el carrito y actualiza el stock de cada producto restando la cantidad que figura en el detalle
     public void actualizarStock(List<DetalleCarrito> detalles) {
         for (DetalleCarrito d : detalles) {
             try {

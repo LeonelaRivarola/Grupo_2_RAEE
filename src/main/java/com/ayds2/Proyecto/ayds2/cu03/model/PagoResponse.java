@@ -7,6 +7,4 @@ public class PagoResponse {
     private String idPreferencia;
     private String initPoint;
     private String sandboxInitPoint;
-
-    public PagoResponse() {}
 }
