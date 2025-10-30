@@ -4,9 +4,9 @@ import lombok.Data;
 
 @Data
 public class DetalleCompra {
-    private int idDetalleCompra;
-    private int idCompra;
-    private int idProductoRaee;
+    private int iddetalleCompra;  // PK autoincremental
     private int cantidad;
     private double precioUnitario;
+    private int id_compra;
+    private int id_ProductoRAEE;
 }
