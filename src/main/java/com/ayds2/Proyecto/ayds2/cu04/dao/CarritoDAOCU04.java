@@ -1,8 +1,9 @@
 package com.ayds2.Proyecto.ayds2.cu04.dao;
 
 import java.util.List;
-import java.util.logging.Logger;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.sql2o.Connection;
 import com.ayds2.Proyecto.ayds2.cu04.model.Carrito;
@@ -14,21 +15,22 @@ import com.google.gson.Gson;
 @Repository
 public class CarritoDAOCU04 implements iCarritoDAOCU04 {
 
+    private static final Logger logger = LoggerFactory.getLogger(CarritoDAOCU04.class);
+
     @Override
     public String select(int id_carrito) {
-        
-        Logger logger = Logger.getLogger("CarritoDAO");
-        logger.info("Ejecutando consulta para obtener el carrito y sus productos.\n");
+        logger.info("Ejecutando consulta para obtener el carrito y sus productos (id_carrito={}).", id_carrito);
 
         try (Connection con = Sql2oDAO.getSql2o().open()) {
-            //primero recuperamos el carrito
-            String sqlCarrito = "SELECT id_carritoRAEE, usuario_id FROM carritoraee " + 
+
+            // Recupera los datos generales del carrito
+            String sqlCarrito = "SELECT id_carritoRAEE, usuario_id FROM carritoraee " +
                                 "WHERE id_carritoRAEE = :id_carritoRAEE";
             Carrito carrito = con.createQuery(sqlCarrito)
                     .addParameter("id_carritoRAEE", id_carrito)
                     .executeAndFetchFirst(Carrito.class);
 
-            //luego recuperamos los productos que están en el carrito
+            // Recupera los productos asociados al carrito
             String sqlProductos = "SELECT pr.id_ProductoRAEE, pr.nombre, pr.categoria_id, pr.descripcion, pr.precio, pr.stock " +
                                 "FROM productoraee pr " +
                                 "JOIN detallecarrito pc ON pr.id_ProductoRAEE = pc.productoRAEE_id " +
@@ -37,7 +39,7 @@ public class CarritoDAOCU04 implements iCarritoDAOCU04 {
                     .addParameter("id_carritoRAEE", id_carrito)
                     .executeAndFetch(ProductoRAEE.class);
 
-            //y  por ultimo recuperamos cuanto cantidad hay de cada producto en el carrito
+            // Recupera las cantidades de cada producto en el carrito
             String sqlDetalles = "SELECT productoRAEE_id, carritoRAEE_id, cantidad " +
                                 "FROM detallecarrito " +
                                 "WHERE carritoRAEE_id = :id_carritoRAEE";
@@ -45,20 +47,23 @@ public class CarritoDAOCU04 implements iCarritoDAOCU04 {
                     .addParameter("id_carritoRAEE", id_carrito)
                     .executeAndFetch(DetalleCarrito.class);
 
+            // Asigna productos y detalles al objeto Carrito
             carrito.setProductos(productos);
             carrito.setDetalles(detalles);
 
+            logger.debug("Carrito {} obtenido correctamente con {} productos.", id_carrito, productos.size());
+
+            // Convierte el carrito a JSON y lo devuelve
             Gson gson = new Gson();
             return gson.toJson(carrito);
 
         } catch (Exception e) {
-            logger.severe("Error al ejecutar consulta del carrito: " + e.getMessage());
-            e.printStackTrace();
+            logger.error("Error al ejecutar consulta del carrito con id {}: {}", id_carrito, e.getMessage(), e);
             return "{\"error\": \"Error al obtener el carrito y sus productos\"}";
         }
     }
 
-    // ---- métodos nuevos ----
+    // ---- Métodos nuevos ----
     @Override
     public void deleteDetallesByCarritoId(int id_carrito) {
         try (Connection con = Sql2oDAO.getSql2o().open()) {
@@ -66,8 +71,11 @@ public class CarritoDAOCU04 implements iCarritoDAOCU04 {
             con.createQuery(sql)
                .addParameter("id_carritoRAEE", id_carrito)
                .executeUpdate();
+
+            logger.info("Detalles del carrito {} eliminados correctamente.", id_carrito);
+
         } catch (Exception e) {
-            Logger.getLogger("CarritoDAO").severe("Error al eliminar detalles del carrito: " + e.getMessage());
+            logger.error("Error al eliminar detalles del carrito {}: {}", id_carrito, e.getMessage(), e);
             throw e;
         }
     } 

@@ -3,14 +3,20 @@ package com.ayds2.Proyecto.ayds2.cu03.dao;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.springframework.stereotype.Repository;
 import org.sql2o.Connection;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.ayds2.Proyecto.ayds2.cu03.model.Compra;
 import com.ayds2.Proyecto.ayds2.cu03.model.DetalleCompra;
 import com.ayds2.Proyecto.ayds2.utils.Sql2oDAO;
 
 @Repository
 public class CompraDAO implements ICompraDAO {
+    private static final Logger logger = LoggerFactory.getLogger(CompraDAO.class);
 
     @Override
     public void registrarCompra(Compra compra) {
@@ -47,7 +53,7 @@ public class CompraDAO implements ICompraDAO {
 
         } catch (Exception e) {
             e.printStackTrace();
-            System.err.println("Error al registrar compra con reflexión: " + e.getMessage());
+            logger.error("Error al registrar compra con reflexión", e);
         }
     }
 
@@ -76,7 +82,8 @@ public class CompraDAO implements ICompraDAO {
                 String.join(", ", columnas),
                 String.join(", ", valores));
 
-        System.out.println("SQL generado reflexivamente: " + sql);
+        logger.debug("SQL generado reflexivamente: {}", sql);
+
         return sql;
     }
 
