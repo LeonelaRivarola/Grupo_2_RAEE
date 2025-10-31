@@ -13,7 +13,6 @@ import com.ayds2.Proyecto.ayds2.cu04.model.Carrito;
 import com.ayds2.Proyecto.ayds2.cu04.model.DetalleCarrito;
 import com.ayds2.Proyecto.ayds2.cu04.model.ProductoRAEE;
 import com.google.gson.Gson;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +28,8 @@ public class CompraService {
     @Autowired private CompraDAO compraDAO;
     @Autowired private ActualizarStockDAO stockDAO;
     @Autowired private CarritoDAOCU04 carritoDAO;
-    @Autowired private PagoFactory pagoFactory;
     @Autowired private UsuarioDAO usuarioDAO;
+    @Autowired private PagoFactory pagoFactory;
     
     private final Gson gson = new Gson();
 

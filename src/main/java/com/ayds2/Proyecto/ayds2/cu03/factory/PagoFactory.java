@@ -15,7 +15,7 @@ public class PagoFactory{
         if (t.contains("mercado") || t.contains("mp")) {
             return new MercadoPagoService();
         }
-        // Si agregamos más métodos de pago, se retornaráin aquí
+        // Si agregamos más métodos de pago, se retornarían acá
         return new MercadoPagoService(); // por defecto
     }
 }
