@@ -84,20 +84,4 @@ public class CompraDAO implements ICompraDAO {
         logger.debug("SQL generado reflexivamente: {}", sql);
         return sql;
     }
-
-    /**
-     * Obtiene el ID del método de pago según su nombre.
-     */
-    public int obtenerIdMetodoPagoPorNombre(String nombreMetodo) {
-        try (Connection con = Sql2oDAO.getSql2o().open()) {
-            String sql = "SELECT idmetodoPago FROM metodopago WHERE nombre = :nombre";
-            Integer id = con.createQuery(sql)
-                    .addParameter("nombre", nombreMetodo)
-                    .executeScalar(Integer.class);
-            return id != null ? id : 1; // Retorna 1 si no se encuentra (por defecto)
-        } catch (Exception e) {
-            logger.error("Error al obtener ID de método de pago '{}'", nombreMetodo, e);
-            return 1;
-        }
-    }
 }

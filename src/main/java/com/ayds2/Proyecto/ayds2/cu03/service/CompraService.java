@@ -2,6 +2,7 @@ package com.ayds2.Proyecto.ayds2.cu03.service;
 
 import com.ayds2.Proyecto.ayds2.cu03.dao.ActualizarStockDAO;
 import com.ayds2.Proyecto.ayds2.cu03.dao.CompraDAO;
+import com.ayds2.Proyecto.ayds2.cu03.dao.MetodoPagoDAO;
 import com.ayds2.Proyecto.ayds2.cu03.dao.UsuarioDAO;
 import com.ayds2.Proyecto.ayds2.cu03.factory.PagoFactory;
 import com.ayds2.Proyecto.ayds2.cu03.model.Compra;
@@ -29,6 +30,7 @@ public class CompraService {
     @Autowired private ActualizarStockDAO stockDAO;
     @Autowired private CarritoDAOCU04 carritoDAO;
     @Autowired private UsuarioDAO usuarioDAO;
+    @Autowired private MetodoPagoDAO metodoPagoDAO;
     @Autowired private PagoFactory pagoFactory;
     
     private final Gson gson = new Gson();
@@ -96,7 +98,7 @@ public class CompraService {
             logger.info("Stock actualizado correctamente para carrito {}", carrito.getId_carritoRAEE());
 
             // 8. Obtención del ID del método de pago desde la base de datos
-            int idMetodo = compraDAO.obtenerIdMetodoPagoPorNombre(metodoPago);
+            int idMetodo = metodoPagoDAO.obtenerIdMetodoPagoPorNombre(metodoPago);
 
             // 9. Creación del objeto Compra
             // Se instancia un objeto Compra con toda la información necesaria para registrar la transacción.

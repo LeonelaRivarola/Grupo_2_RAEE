@@ -8,10 +8,11 @@ import org.sql2o.Connection;
 import com.ayds2.Proyecto.ayds2.utils.Sql2oDAO;
 
 @Repository
-public class UsuarioDAO {
+public class UsuarioDAO implements IUsuarioDAO {
     private static final Logger logger = LoggerFactory.getLogger(UsuarioDAO.class);
 
     // Devuelvo el email del usaurio dado su id
+    @Override
     public String obtenerEmailPorId(int usuarioId) {
         String sql = "SELECT email FROM usuario WHERE id_usuario = :usuarioId";
         try (Connection con = Sql2oDAO.getSql2o().open()) {
