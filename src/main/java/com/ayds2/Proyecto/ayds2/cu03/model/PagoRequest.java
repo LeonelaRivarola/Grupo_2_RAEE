@@ -1,7 +1,6 @@
 package com.ayds2.Proyecto.ayds2.cu03.model;
 
 import java.math.BigDecimal;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
