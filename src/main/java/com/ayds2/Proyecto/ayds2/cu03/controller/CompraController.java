@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.ayds2.Proyecto.ayds2.cu03.service.CompraService;
 
-//http://localhost:8081/compra/comprar?fomraEntrega=domicilio&metodoPago=mercadoPago
 @RestController
 @RequestMapping("/compra")
 public class CompraController {
@@ -16,8 +15,9 @@ public class CompraController {
     @Autowired
     private CompraService compraService;
 
-    //1.1
     //El jsonCarrito va en el body raw, se envia el que se obtenga del caso de uso ver carrito
+    //CU-03: Comprar carrito RAEE
+    //http://localhost:8081/compra/comprar?fomraEntrega=domicilio&metodoPago=mercadoPago
     @PostMapping("/comprar")
     public String comprar(@RequestParam String formaEntrega,
                           @RequestParam String metodoPago,
