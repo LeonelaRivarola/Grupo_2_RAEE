@@ -12,6 +12,7 @@ public class ProductoRaeeService {
         this.productoRaeeDAO = productoRaeeDAO;
     }
 
+    // CU-02: Ver Producto RAEE
     public String getProducto(int id) {
         try {
             String productoRaee = productoRaeeDAO.selectProducto(id);

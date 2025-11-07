@@ -9,6 +9,7 @@ import org.sql2o.Connection;
 @Repository
 public class ProductoRaeeDAO implements iProductoRaeeDAO {
 
+    // CU-02: Ver Producto RAEE
     @Override
     public String selectProducto(int id) {
         String sql = "SELECT p.id_ProductoRAEE, p.nombre, p.precio, p.descripcion, " +
@@ -35,6 +36,7 @@ public class ProductoRaeeDAO implements iProductoRaeeDAO {
         }
     }
 
+    //CU-03: Comprar carrito RAEE
     @Override
     public void actualizaStock(int idProducto, int cantidad) {
             String sql = "UPDATE productoraee SET stock = stock - :cantidad WHERE id_ProductoRAEE = :idProducto";
