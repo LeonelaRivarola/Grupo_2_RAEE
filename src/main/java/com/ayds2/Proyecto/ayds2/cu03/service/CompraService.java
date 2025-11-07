@@ -1,6 +1,6 @@
 package com.ayds2.Proyecto.ayds2.cu03.service;
 
-import com.ayds2.Proyecto.ayds2.cu03.dao.ActualizarStockDAO;
+import com.ayds2.Proyecto.ayds2.cu02.dao.ProductoRaeeDAO;
 import com.ayds2.Proyecto.ayds2.cu03.dao.CompraDAO;
 import com.ayds2.Proyecto.ayds2.cu03.dao.MetodoPagoDAO;
 import com.ayds2.Proyecto.ayds2.cu03.dao.UsuarioDAO;
@@ -27,7 +27,7 @@ public class CompraService {
     private static final Logger logger = LoggerFactory.getLogger(CompraService.class);
 
     @Autowired private CompraDAO compraDAO;
-    @Autowired private ActualizarStockDAO stockDAO;
+    @Autowired private ProductoRaeeDAO stockDAO;
     @Autowired private CarritoDAOCU04 carritoDAO;
     @Autowired private UsuarioDAO usuarioDAO;
     @Autowired private MetodoPagoDAO metodoPagoDAO;

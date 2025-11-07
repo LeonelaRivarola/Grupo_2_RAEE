@@ -35,4 +35,15 @@ public class ProductoRaeeDAO implements iProductoRaeeDAO {
             return null;
         }
     }
+
+    @Override
+    public void actualizaStock(int idProducto, int cantidad) {
+            String sql = "UPDATE productoraee SET stock = stock - :cantidad WHERE id_ProductoRAEE = :idProducto";
+            try (Connection con = Sql2oDAO.getSql2o().open()) {
+                con.createQuery(sql)
+                    .addParameter("cantidad", cantidad)
+                    .addParameter("idProducto", idProducto)
+                    .executeUpdate();
+            }
+    }
 }
