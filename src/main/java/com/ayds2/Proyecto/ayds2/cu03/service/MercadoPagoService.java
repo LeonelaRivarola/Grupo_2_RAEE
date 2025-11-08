@@ -40,7 +40,7 @@ public class MercadoPagoService implements IPago {
                         .customHeaders(Map.of("X-Idempotency-Key", UUID.randomUUID().toString()))
                         .build());
 
-        // Devuelvo los datos relevantes de la preferencia creada
+        // Devuelvo los datos necesarios para iniciar el checkout
         PagoResponse r = new PagoResponse();
         r.setIdPreferencia(pref.getId());
         r.setInitPoint(pref.getInitPoint());
@@ -48,12 +48,15 @@ public class MercadoPagoService implements IPago {
         return r;
     }
 
+    /*
+     * Dado que no se cuenta con Front para realizar el checkout y completar los webhooks del pago,
+     * simulamos la validación del pago asumiendo que siempre es aprobado. Esto se debe a que no 
+     * podemos obtener un paymentId real.
+     */
     @Override
     public boolean validarPago(String prefId) {
         
         try {
-            // En entorno de prueba, no existe un pago real, solo la preferencia.
-            // Por lo tanto, asumimos que está aprobado.
             System.out.println("Simulación: validación omitida para prefId = " + prefId);
             return true;
         } catch (Exception e) {
