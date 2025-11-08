@@ -40,8 +40,10 @@ public class CompraDAO implements ICompraDAO {
             throws IllegalAccessException {
 
         String sql = generarInsertReflexivo(obj, nombreTabla, campoPK);
+
         org.sql2o.Query query = con.createQuery(sql, true);
 
+        // Mira todos los atributos 
         for (Field field : obj.getClass().getDeclaredFields()) {
             field.setAccessible(true);
             String nombreCampo = field.getName();
@@ -54,8 +56,9 @@ public class CompraDAO implements ICompraDAO {
             query.addParameter(nombreCampo, valor);
         }
 
-        //Devuelve el ID de la compra.
+        //Ejecuta el insert
         Number key = (Number) query.executeUpdate().getKey();
+        //Devuelve el ID generado (autoincremental)
         return key != null ? key.intValue() : -1;
     }
 
@@ -63,6 +66,7 @@ public class CompraDAO implements ICompraDAO {
      * Genera la sentencia SQL INSERT dinámicamente usando reflexión sobre el objeto.
      */
     private String generarInsertReflexivo(Object obj, String nombreTabla, String campoPK) {
+
         List<String> columnas = new java.util.ArrayList<>();
         List<String> valores = new java.util.ArrayList<>();
 
