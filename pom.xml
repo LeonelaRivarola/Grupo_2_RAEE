@@ -56,13 +56,6 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-<<<<<<< HEAD
-    <groupId>org.sql2o</groupId>
-    <artifactId>sql2o</artifactId>
-    <version>1.6.0</version>
-</dependency>
-
-=======
     		<groupId>com.google.code.gson</groupId>
     		<artifactId>gson</artifactId>
    			<version>2.10.1</version>
@@ -73,7 +66,7 @@
   			<artifactId>sdk-java</artifactId>
   			<version>2.5.0</version>
 		</dependency>
->>>>>>> rama-est
+		
 	</dependencies>
 
 	<build>
