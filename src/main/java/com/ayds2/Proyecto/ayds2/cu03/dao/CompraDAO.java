@@ -54,6 +54,7 @@ public class CompraDAO implements ICompraDAO {
             query.addParameter(nombreCampo, valor);
         }
 
+        //Devuelve el ID de la compra.
         Number key = (Number) query.executeUpdate().getKey();
         return key != null ? key.intValue() : -1;
     }
